@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Barriecito&family=Cherry+Bomb+One&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <title>Level One</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: url('guesscursor.png'), auto;
+        }
+        body {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgb(0, 183, 255), rgb(14, 25, 73));
+        }
+        header {
+            width: 100%;
+            height: 20dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        header h1 {
+            font-size: 4.3rem;
+            font-family: "Barriecito", system-ui;
+            font-weight: 900;
+            font-style: normal;
+            color: white;
+            text-shadow: 2px 2px 1px black;
+        }
+        header span {
+            color: red;
+            text-shadow: 5px 5px 5px black;
+        }
+        .level-section {
+            width: 100%;
+            height: 80dvh;
+        }
+        .level-box {
+            justify-self: center;
+            width: 90%;
+            height: 90%;
+        }
+        .level-box h2 {
+            color: white;
+            justify-self: center;
+            font-size: 1.8rem;
+            font-family: "Barriecito", system-ui;
+            font-weight: 400;
+            font-style: normal;
+            padding: 5px;
+        }
+        .emoji-box {
+            justify-self: center;
+            width: 95%;
+            height: 50dvh;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+        .emoji {
+            width: 30dvh;
+            height: 30dvh;
+        }
+        .emoji img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background-repeat: no-repeat;
+        }
+        .plus {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .plus img {
+            width: 55%;
+            height: 55%;
+            object-fit: cover;
+        }
+        .guessing-box {
+            margin-top: 2.5dvh;
+            justify-self: center;
+            width: 50%;
+            height: 10dvh;
+            display: flex;
+            justify-content: center;
+            column-gap: 3%;
+            align-items: center;
+        }
+        h3 {
+            position: absolute;
+            left: 13%;
+            font-size: 1rem;
+            font-family: "Audiowide", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+        input#guess {
+            height: 5dvh;
+            width: 45dvh;
+            border: 2px solid rgb(12, 6, 39);
+            font-family: "Audiowide", sans-serif;
+            font-weight: 100;
+            font-style: normal;
+            text-indent: 20px;
+        }
+        input.button {
+            width: 15dvh;
+            height: 5dvh;
+            font-family: "Audiowide", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 1.2rem;
+            box-shadow: 3px 3px 4px black;
+            border: none;
+            cursor: pointer;
+            transition: 0.2 ease;
+        }
+        input.button:active {
+            box-shadow: 3px 3px 4px black inset;
+        }
+        h4 {
+            justify-self: center;
+            font-size: 2dvh;
+            margin-left: -6dvh;
+            font-family: sans-serif;
+            font-weight: 200;
+        }
+        .return {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 150px;
+            height: 30px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.432);
+            border-radius: 10px;
+            box-shadow: 4px 4px 4px black;
+            z-index: 5;
+            transition: all 0.3s ease;
+            &:hover {scale: 1.05;cursor: pointer;}
+        }
+        #correct,
+        #wrong {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5.6rem;
+            font-family: "Cherry Bomb One", system-ui;
+            font-weight: 400;
+            font-style: normal;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            text-shadow: 4px 4px 4px black;
+        }
+        #correct {
+            color: rgb(0, 255, 0);
+        }
+        #wrong {
+            color: red;
+        }
+        .attempts {
+            position: absolute;
+            top: 10dvh;
+            left: 4dvh;
+            color: white;
+            text-shadow: 3px 3px 4px black;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="correct"> CORRECT! </h1>
+    <h1 id="wrong"> WRONG GUESS! </h1>
+    <h3 class="attempts"> Wrong Attempts: <span id="attempt"></span></h3>
+    <div class="return" onclick="window.location.href='guess.html';"> Return to home </div>
+    <header>
+        <h1> Guess this <span>Marvel</span> Character! </h1>
+    </header>
+    <section class="level-section">
+        <div class="level-box">
+            <h2> Level 3 | Difficulty: Easy </h2>
+            <div class="emoji-box">
+                <div class="emoji">
+                    <img src="cat.webp">
+                </div>
+                <div class="emoji plus">
+                    <img src="plus.png">
+                </div>
+                <div class="emoji">
+                    <img src="guy.png">
+                </div>
+                <div class="emoji plus">
+                    <img src="plus.png">
+                </div>
+                <div class="emoji">
+                    <img src="crown.png">
+                </div>
+            </div>
+            <div class="guessing-box">
+                <h3> Hint: King with a high tech suit</h3>
+                <input type="text" name="guess" id="guess" placeholder="Type Your Guess Here" autocomplete="off">
+                <input type="button" class="button" value="Guess" onclick="guessThree()">
+            </div>
+            <h4> RULES: NO SPACE AND ALL CAPITAL LETTERS ONLY </h4>
+        </div>
+    </section>
+    <script src="script.js"></script>
+</body>
+</html>

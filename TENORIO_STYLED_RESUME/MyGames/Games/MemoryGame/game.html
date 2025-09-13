@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet">
+    <title> Dumbledore's Memory Game </title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Gloria+Hallelujah&family=Indie+Flower&family=Rowdies:wght@300;400;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Cinzel", serif;
+            font-optical-sizing: auto;
+            font-weight: 700;
+            font-style: normal;
+            cursor: url('memorycursor.png'), auto;
+        }
+
+        body {
+            width: 100%;
+            height: 100dvh;
+            background-color: rgb(5, 0, 0);
+        }
+
+        .main-body {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            background: url('bg.jpg');
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        .main-body::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0000005d;
+        }
+
+        .main-body>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        .return {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 150px;
+            height: 40px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(40, 40, 40, 0.8);
+            border-radius: 10px;
+            box-shadow:
+                0 4px 6px rgba(0, 0, 0, 0.2),
+                inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            z-index: 5;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            color: #e0e0e0;
+            font-weight: 500;
+            border: 1px solid #3a3a3a;
+            backdrop-filter: blur(5px);
+        }
+
+        .return:hover {
+            transform: translateY(-2px) scale(1.02);
+            cursor: pointer;
+            background: rgba(50, 50, 50, 0.9);
+            box-shadow:
+                0 6px 12px rgba(0, 0, 0, 0.3),
+                inset 0 1px 1px rgba(255, 255, 255, 0.15);
+            color: white;
+            border-color: #ffffff;
+        }
+
+        .return:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .game {
+            justify-self: end;
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 10px;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            margin: 5dvh;
+        }
+
+        .card {
+            position: relative;
+            width: 12dvh;
+            height: 20dvh;
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease;
+            border: 2px solid black;
+            border-radius: 10px;
+        }
+
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            backface-visibility: hidden;
+            transform: rotateY(180deg);
+            border-radius: 10px;
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('card.png');
+            background-position: center;
+            background-size: cover;
+            backface-visibility: hidden;
+            border-radius: 10px;
+        }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card.matched {
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s 0.5s, opacity 0.5s linear;
+            pointer-events: none;
+        }
+
+        .scoreboard {
+            position: absolute;
+            top: 10%;
+            left: 3%;
+            width: 60dvh;
+            height: 85dvh;
+        }
+
+        .left-panel {
+            padding: 20px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .timer-container {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid goldenrod;
+        }
+
+        .timer {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: goldenrod;
+            margin-top: 10px;
+        }
+
+        .houses-container {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #3a3a3a;
+            height: 55dvh;
+        }
+
+        .houses-container h2 {
+            font-size: 4.3dvh;
+            text-align: center;
+            padding-bottom: 5px;
+            color: rgb(91, 163, 31);
+        }
+
+        .house {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            width: 9dvh;
+            height: 9dvh;
+            border-radius: 5px;
+        }
+
+        .house img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            margin-right: 15px;
+        }
+
+        .house-progress {
+            flex-grow: 1;
+            height: 4.5dvh;
+            background: #33333388;
+            border-radius: 10px;
+            overflow: hidden;
+            position: absolute;
+            width: 40dvh;
+            margin-bottom: 7.5dvh;
+            transform: translateY(4dvh);
+            z-index: 1;
+            left: 15dvh;
+        }
+
+        .house-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff9d42, #ffa879, #ffc163, #feff5c, #c0ff33);
+            width: 0%;
+            transition: width 0.3s;
+            z-index: 4;
+        }
+
+        .house-name {
+            font-weight: bold;
+            min-width: 100px;
+            text-transform: uppercase;
+            z-index: 3;
+            font-size: 3dvh;
+            padding-left: 2dvh;
+            color: rgb(255, 255, 255);
+            text-shadow: 2px 2px 4px black;
+        }
+
+        .house-percentage {
+            min-width: 20dvh;
+            text-align: right;
+            z-index: 5;
+            color: rgb(255, 255, 255);
+            text-shadow: 2px 2px 4px black;
+        }
+
+        .rankings-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 70dvh;
+            z-index: 20;
+            display: none;
+            text-align: center;
+            font-size: 2.6dvh;
+        }
+
+        .rankings-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px 0;
+            font-size: 1.2em;
+        }
+
+        .ranking-house-image {
+            width: 25dvh;
+            height: 15dvh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ranking-house-image img {
+            width: 100%;
+            height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+        }
+
+
+        .player-house {
+            color: gold;
+            font-weight: bold;
+        }
+
+        .trophy-icon {
+            width: 15dvh;
+            height: 15dvh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .trophy-icon img {
+            width: 100%;
+            height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .elimination-message {
+            font-size: 0.8em;
+            margin-left: 10px;
+            color: #ff6b6b;
+            font-style: italic;
+        }
+
+        .buttons {
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .buttons button {
+            width: 17dvh;
+            height: 7.5dvh;
+            font-size: 1.8dvh;
+            background: rgba(40, 40, 40, 0.8);
+            border-radius: 10px;
+            box-shadow:
+                0 4px 6px rgba(0, 0, 0, 0.2),
+                inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            z-index: 5;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            color: #e0e0e0;
+            font-weight: 500;
+            border: 1px solid #3a3a3a;
+            backdrop-filter: blur(5px);
+        }
+
+        .buttons button:hover {
+            transform: translateY(-2px) scale(1.02);
+            cursor: pointer;
+            background: rgba(50, 50, 50, 0.9);
+            box-shadow:
+                0 6px 12px rgba(0, 0, 0, 0.3),
+                inset 0 1px 1px rgba(255, 255, 255, 0.15);
+            color: white;
+            border-color: #ffffff;
+        }
+
+        .buttons button:active {
+            transform: translateY(0) scale(0.98);
+        }
+        @media only screen and (max-width: 768px) {
+    .main-body {
+        background-position: top center;
+    }
+
+    .return {
+        width: 120px;
+        height: 35px;
+        font-size: 0.9rem;
+        top: 10px;
+        left: 10px;
+    }
+
+    .scoreboard {
+        position: relative;
+        width: 100%;
+        height: auto;
+        top: 0;
+        left: 0;
+        padding: 10px;
+    }
+
+    .left-panel {
+        gap: 15px;
+        padding: 10px;
+    }
+
+    .timer-container {
+        padding: 10px;
+    }
+
+    .timer {
+        font-size: 1.8rem;
+    }
+
+    .houses-container {
+        height: auto;
+        padding: 10px;
+    }
+
+    .houses-container h2 {
+        font-size: 2.5dvh;
+    }
+
+    .house {
+        width: 7dvh;
+        height: 7dvh;
+        margin-bottom: 10px;
+    }
+
+    .house-progress {
+        width: calc(100% - 12dvh);
+        height: 3dvh;
+        margin-bottom: 5dvh;
+        transform: translateY(3dvh);
+        left: 12dvh;
+    }
+
+    .house-name {
+        font-size: 2dvh;
+        padding-left: 1dvh;
+    }
+
+    .game {
+        grid-template-columns: repeat(4, 1fr);
+        margin: 2dvh;
+        margin-top: 0;
+    }
+
+    .card {
+        width: 12dvh;
+        height: 16dvh;
+    }
+
+    .rankings-container {
+        width: 90%;
+        padding: 15px;
+        font-size: 2dvh;
+    }
+
+    .ranking-house-image {
+        width: 15dvh;
+        height: 10dvh;
+    }
+
+    .trophy-icon {
+        width: 10dvh;
+        height: 10dvh;
+    }
+
+    .buttons button {
+        width: 12dvh;
+        height: 6dvh;
+        font-size: 1.5dvh;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .game {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .card {
+        width: 10dvh;
+        height: 14dvh;
+    }
+
+    .house-progress {
+        width: calc(100% - 10dvh);
+        left: 10dvh;
+    }
+}
+    </style>
+
+    <head>
+
+    <body>
+        <div class="return" onclick="window.location.assign('memory.html')"> Return to menu </div>
+        <section class="main-body">
+            <div class="scoreboard">
+                <div class="left-panel">
+                    <div class="timer-container">
+                        <h2>Time Counter</h2>
+                        <div class="timer">00:00</div>
+                    </div>
+                    <div class="houses-container">
+                        <h2>House Progress</h2>
+                        <div id="houses-list"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="game"></div>
+        </section>
+        <div class="rankings-container" id="rankingsContainer">
+            <h2>House Cup Final Rankings</h2>
+            <ol class="rankings-list" id="rankingsList"></ol>
+            <div class="buttons">
+                <button onclick="window.location.reload()">Play Again</button>
+                <button onclick="window.location.assign('memory.html')">Return to Menu</button>
+            </div>
+        </div>
+
+        <script src="memoryscript.js"></script>
+        <script>
+            window.onload = function () {
+                const gameaudio = new Audio('game.mp3');
+                gameaudio.loop = true;
+                gameaudio.play().catch(e => {
+                    console.log("Auto-play was prevented:", e);
+                    document.body.addEventListener('click', () => gameaudio.play());
+                });
+            };
+            document.addEventListener('DOMContentLoaded', function () {
+                const difficulty = window.GameConfig.getDifficulty();
+                const playerHouse = window.houseChosen.getHouse();
+                console.log("Current difficulty:", difficulty);
+                console.log("House: " + playerHouse)
+                const pictures = ['harry.webp', 'hermione.jpg', 'ron.jpg', 'draco.jpg', 'bella.jpg',
+                    'buckbeak.jpg', 'cedric.jpg', 'dumble.jpg', 'hagrid.jpg', 'luna.jpg', 'lupin.jpg',
+                    'oliver.jpg', 'peter.jpg', 'sirius.jpg', 'snape.jpg', 'voldemort.jpg'];
+                const houseImages = {
+                    'gryffindor': 'gryffindor.png',
+                    'hufflepuff': 'hufflepuff2.png',
+                    'ravenclaw': 'ravenclaw.png',
+                    'slytherin': 'slytherin.png'
+                };
+                const trophies = {
+                    'first': 'gold.png',
+                    'second': 'silver.png',
+                    'third': 'bronze.png'
+                };
+
+                const cardPictures = [];
+                let totalPairs;
+                let gameCompleted = false;
+                let completedHouses = [];
+
+                let seconds = 0;
+                const timerElement = document.querySelector('.timer');
+                let timerInterval = setInterval(() => {
+                    seconds++;
+                    const minutes = Math.floor(seconds / 60);
+                    const remainingSeconds = seconds % 60;
+                    timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+                }, 1000);
+
+                const allHouses = ['gryffindor', 'hufflepuff', 'ravenclaw', 'slytherin'];
+                const houses = allHouses.map(house => ({
+                    name: house,
+                    progress: 0,
+                    isPlayer: house === playerHouse,
+                    computerTime: null,
+                    completed: false,
+                    completionTime: null
+                }));
+
+                houses.forEach(house => {
+                    if (!house.isPlayer) {
+                        let minTime, maxTime;
+                        switch (difficulty) {
+                            case 'easy':
+                                minTime = 30;
+                                maxTime = 45;
+                                break;
+                            case 'medium':
+                                minTime = 45;
+                                maxTime = 65;
+                                break;
+                            case 'hard':
+                                minTime = 85;
+                                maxTime = 100;
+                                break;
+                            default:
+                                minTime = 45;
+                                maxTime = 65;
+                        }
+                        const timeRange = maxTime - minTime;
+                        house.computerTime = Math.floor(Math.random() * (timeRange + 1)) + minTime;
+                        console.log(`${house.name} will complete in ${house.computerTime} seconds`);
+                    }
+                });
+
+                const housesList = document.getElementById('houses-list');
+                houses.forEach((house, index) => {
+                    const houseElement = document.createElement('div');
+                    houseElement.className = 'house';
+
+                    const img = document.createElement('img');
+                    img.src = houseImages[house.name];
+                    img.alt = house.name;
+                    img.className = 'house-image';
+
+                    const nameElement = document.createElement('div');
+                    nameElement.className = 'house-name';
+                    nameElement.textContent = house.name;
+
+                    const progressContainer = document.createElement('div');
+                    progressContainer.className = 'house-progress';
+
+                    const progressBar = document.createElement('div');
+                    progressBar.className = 'house-progress-bar';
+                    progressBar.style.width = '0%';
+
+                    const percentageElement = document.createElement('div');
+                    percentageElement.className = 'house-percentage';
+                    percentageElement.textContent = '0%';
+
+                    progressContainer.appendChild(progressBar);
+                    houseElement.appendChild(img);
+                    houseElement.appendChild(nameElement);
+                    houseElement.appendChild(progressContainer);
+                    houseElement.appendChild(percentageElement);
+
+                    housesList.appendChild(houseElement);
+                });
+
+                let progressInterval = setInterval(() => {
+                    if (gameCompleted) return;
+
+                    const progressBars = document.querySelectorAll('.house-progress-bar');
+                    const percentageTexts = document.querySelectorAll('.house-percentage');
+
+                    houses.forEach((house, index) => {
+                        if (house.isPlayer || house.completed) return;
+
+                        const progress = Math.min(Math.floor((seconds / house.computerTime) * 100), 100);
+                        house.progress = progress;
+                        progressBars[index].style.width = `${progress}%`;
+                        percentageTexts[index].textContent = `${progress}%`;
+
+                        if (progress >= 100 && !house.completed) {
+                            house.completed = true;
+                            house.completionTime = seconds;
+                            completedHouses.push(house);
+                            checkGameCompletion();
+                        }
+                    });
+                }, 1000);
+
+                setInterval(() => {
+                    if (gameCompleted) return;
+
+                    const progressBars = document.querySelectorAll('.house-progress-bar');
+                    const percentageTexts = document.querySelectorAll('.house-percentage');
+
+                    houses.forEach((house, index) => {
+                        if (!house.isPlayer && !house.completed) {
+                            const increment = Math.floor(Math.random() * 3);
+                            house.progress = Math.min(house.progress + increment, 100);
+                            progressBars[index].style.width = `${house.progress}%`;
+                            percentageTexts[index].textContent = `${house.progress}%`;
+
+                            if (house.progress >= 100 && !house.completed) {
+                                house.completed = true;
+                                house.completionTime = seconds;
+                                completedHouses.push(house);
+                                checkGameCompletion();
+                            }
+                        }
+                    });
+                }, 2000);
+
+                function checkGameCompletion() {
+                    const playerHouseObj = houses.find(house => house.isPlayer);
+                    if (playerHouseObj && playerHouseObj.progress >= 100 && !playerHouseObj.completed) {
+                        playerHouseObj.completed = true;
+                        playerHouseObj.completionTime = seconds;
+                        completedHouses.push(playerHouseObj);
+                    }
+
+                    const allCompleted = houses.every(house => house.completed);
+                    const playerCompleted = playerHouseObj && playerHouseObj.completed;
+
+                    if (allCompleted || playerCompleted) {
+                        gameCompleted = true;
+                        clearInterval(progressInterval);
+                        clearInterval(timerInterval);
+                        showFinalRankings();
+                    }
+                }
+
+                function showFinalRankings() {
+                    houses.forEach(house => {
+                        if (!house.completed && !house.isPlayer) {
+                            house.completionTime = house.computerTime;
+                        }
+                    });
+
+                    completedHouses = [...houses].sort((a, b) => {
+                        if (a.completionTime !== null && b.completionTime !== null) {
+                            return a.completionTime - b.completionTime;
+                        }
+
+                        if (a.completionTime !== null) return -1;
+                        if (b.completionTime !== null) return 1;
+                        return 0;
+                    });
+
+                    const rankingsList = document.getElementById('rankingsList');
+                    rankingsList.innerHTML = '';
+
+                    completedHouses.forEach((house, index) => {
+                        const rankingItem = document.createElement('li');
+                        rankingItem.className = 'ranking-item';
+
+                        const positionElement = document.createElement('span');
+                        positionElement.className = 'ranking-position';
+                        positionElement.textContent = `${index + 1}.`;
+                        rankingItem.appendChild(positionElement);
+
+                        if (index < 3) {
+                            const trophyKey = index === 0 ? 'first' : index === 1 ? 'second' : 'third';
+                            const trophyImg = document.createElement('img');
+                            trophyImg.src = trophies[trophyKey];
+                            trophyImg.alt = `${trophyKey} place`;
+                            trophyImg.className = 'trophy-icon';
+                            rankingItem.appendChild(trophyImg);
+                        } else {
+                            const eliminatedMsg = document.createElement('span');
+                            eliminatedMsg.className = 'elimination-message';
+                            eliminatedMsg.textContent = 'Eliminated! Try again next year!';
+                            eliminatedMsg.style.marginLeft = '10px';
+                            eliminatedMsg.style.fontStyle = 'italic';
+                            eliminatedMsg.style.color = '#ff6b6b';
+                            rankingItem.appendChild(eliminatedMsg);
+                        }
+
+                        const houseImage = document.createElement('img');
+                        houseImage.src = houseImages[house.name];
+                        houseImage.alt = house.name;
+                        houseImage.className = 'ranking-house-image';
+                        rankingItem.appendChild(houseImage);
+
+                        const houseName = document.createElement('span');
+                        const displayTime = house.completed ? house.completionTime : house.computerTime;
+                        houseName.textContent = `${house.name} (${formatTime(displayTime)})`;
+                        if (house.isPlayer) {
+                            houseName.className = 'player-house';
+                        }
+                        rankingItem.appendChild(houseName);
+
+                        rankingsList.appendChild(rankingItem);
+                    });
+
+                    document.getElementById('rankingsContainer').style.display = 'block';
+                }
+
+                function formatTime(seconds) {
+                    const minutes = Math.floor(seconds / 60);
+                    const remainingSeconds = seconds % 60;
+                    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+                }
+
+                if (difficulty === 'easy') {
+                    const selected = pictures.slice(0, 8);
+                    totalPairs = 8;
+                    selected.forEach(img => {
+                        cardPictures.push(img, img);
+                    });
+                }
+                else if (difficulty === 'medium') {
+                    const shuffled = [...pictures].sort(() => Math.random() - 0.5);
+                    const selected = shuffled.slice(0, 12);
+                    totalPairs = 12;
+                    selected.forEach(img => {
+                        cardPictures.push(img, img);
+                    });
+                }
+                else if (difficulty === 'hard') {
+                    totalPairs = 16;
+                    pictures.forEach(img => {
+                        cardPictures.push(img, img);
+                    });
+                }
+
+                const shuffle = cardPictures.sort(() => Math.random() - 0.5);
+                const gameBox = document.querySelector('.game');
+                let flippedCards = [];
+                let matchedPairs = 0;
+                let lockBoard = false;
+
+                shuffle.forEach((imagePath, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.dataset.image = imagePath;
+                    card.dataset.index = index;
+
+                    const img = document.createElement('img');
+                    img.src = imagePath;
+
+                    card.appendChild(img);
+                    gameBox.appendChild(card);
+
+                    card.onclick = function () {
+                        if (gameCompleted || lockBoard) return;
+                        if (this === flippedCards[0]) return;
+                        if (this.classList.contains('flipped')) {
+                            return;
+                        }
+
+                        this.classList.add('flipped');
+
+                        if (!flippedCards.length) {
+                            flippedCards.push(this);
+                            return;
+                        }
+
+                        flippedCards.push(this);
+                        lockBoard = true;
+
+                        checkForMatch();
+                    }
+                });
+
+                function checkForMatch() {
+                    const [firstCard, secondCard] = flippedCards;
+                    const isMatch = firstCard.dataset.image === secondCard.dataset.image;
+
+                    if (isMatch) {
+                        setTimeout(function () {
+                            firstCard.classList.add('matched');
+                            secondCard.classList.add('matched');
+                            matchedPairs++;
+
+                            updatePlayerProgress(matchedPairs, totalPairs);
+
+                            if (matchedPairs === totalPairs) {
+                                const playerHouseIndex = houses.findIndex(h => h.isPlayer);
+                                const progressBars = document.querySelectorAll('.house-progress-bar');
+                                const percentageTexts = document.querySelectorAll('.house-percentage');
+
+                                houses[playerHouseIndex].progress = 100;
+                                progressBars[playerHouseIndex].style.width = '100%';
+                                percentageTexts[playerHouseIndex].textContent = '100%';
+
+                                houses[playerHouseIndex].completed = true;
+                                houses[playerHouseIndex].completionTime = seconds;
+                                completedHouses.push(houses[playerHouseIndex]);
+
+                                checkGameCompletion();
+                            }
+                        }, 700);
+
+                        resetBoard();
+                    }
+                    else {
+                        setTimeout(() => {
+                            firstCard.classList.remove('flipped');
+                            secondCard.classList.remove('flipped');
+                            resetBoard();
+                        }, 1000);
+                    }
+                }
+
+                function updatePlayerProgress(currentPairs, totalPairs) {
+                    const playerHouseIndex = houses.findIndex(h => h.isPlayer);
+                    if (playerHouseIndex === -1) return;
+
+                    const newProgress = Math.floor((currentPairs / totalPairs) * 100);
+                    houses[playerHouseIndex].progress = newProgress;
+
+                    const progressBars = document.querySelectorAll('.house-progress-bar');
+                    const percentageTexts = document.querySelectorAll('.house-percentage');
+
+                    progressBars[playerHouseIndex].style.width = `${newProgress}%`;
+                    percentageTexts[playerHouseIndex].textContent = `${newProgress}%`;
+                }
+
+                function resetBoard() {
+                    flippedCards = [];
+                    lockBoard = false;
+                }
+            });
+        </script>
+    </body>
+
+</html>

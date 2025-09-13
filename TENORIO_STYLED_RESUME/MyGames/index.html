@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <title> My games </title>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            const audio = new Audio('music.mp3');
+            audio.loop = true;
+            const playMusic = audio.play();
+            if (playMusic !== undefined) {
+                playMusic.catch(error => {
+                    const playButton = document.createElement('button');
+                    playButton.textContent = 'music o wag na?';
+                    playButton.style.padding = '10px 20px';
+                    playButton.style.fontSize = '16px';
+                    playButton.style.margin = '20px';
+                    playButton.style.position = 'fixed';
+                    playButton.style.background = 'transparent';
+                    playButton.style.color = 'white';
+                    playButton.style.textShadow = '1px 1px 3px black';
+                    playButton.style.border = '2px solid white';
+                    playButton.style.cursor = 'pointer';
+                    playButton.onclick = function() {
+                        audio.play();
+                        document.body.removeChild(playButton);
+                    };
+                    document.body.appendChild(playButton);
+                });
+            }
+        });
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: url('cursor.png'), auto;
+        }
+
+        body {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+        }
+
+        video {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        .title {
+            align-self: center;
+            height: 150px;
+            width: 100%;
+            padding-top: 5%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .title h1 {
+            font-family: "Press Start 2P", system-ui;
+            font-weight: 400;
+            font-style: normal;
+            text-shadow: 4px 4px 5px black;
+        }
+
+        .title span {
+            font-size: 5rem;
+        }
+
+        span.space {
+            width: 30px;
+            display: inline-block;
+        }
+
+        span.yellow {
+            color: yellow;
+        }
+
+        span.red {
+            color: red;
+        }
+
+        span.blue {
+            color: blue;
+        }
+
+        .arcade {
+            margin-top: 10px;
+            width: 100%;
+            height: 440px;
+        }
+
+        .arcade h1 {
+            font-size: 3rem;
+            font-family: "Audiowide", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            color: white;
+            text-shadow: 3px 3px 4px black;
+            padding-left: 5%;
+            padding-top: 2%;
+            padding-bottom: 0.5%;
+        }
+
+        .games-container {
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+            row-gap: 50px;
+            column-gap: 10px;
+        }
+
+        .game-box {
+            width: 300px;
+            height: 300px;
+            background-color: transparent;
+            box-shadow: 10px 10px 4px rgba(0, 0, 0, 0.733);
+            transition: 0.3s ease;
+        }
+
+        .game-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .game-box:hover {
+            scale: 1.05;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <video autoplay loop muted src="bg.mp4" type="video/mp4"></video>
+    <div class="title">
+        <h1>
+            <span class="yellow">M</span>
+            <span class="red">Y</span>
+            <span class="space"></span>
+            <span class="blue">G</span>
+            <span class="yellow">A</span>
+            <span class="red">M</span>
+            <span class="blue">E</span>
+            <span class="yellow">S</span>
+        </h1>
+    </div>
+    <section class="arcade">
+        <h1> Arcade Games </h1>
+        <div class="games-container">
+            <div class="game-box">
+                <img src="runthumbnail.png" onclick="window.location.href='./Games/CapybaraGame/run.html'">
+            </div>
+            <div class="game-box">
+                <img src="guessthumbnail.png" onclick="window.location.href='./Games/GuessingGame/guess.html'">
+            </div>
+            <div class="game-box">
+                <img src="housecupthumbnail.png" onclick="window.location.href='./Games/MemoryGame/memory.html'">
+            </div>
+            <!--
+            <div class="game-box">
+
+            </div>
+            <div class="game-box">
+                
+            </div>
+            <div class="game-box">
+                
+            </div>
+            <div class="game-box">
+                
+            </div>
+            <div class="game-box">
+                
+            </div>
+            -->
+        </div>
+    </section>
+</body>
+
+</html>

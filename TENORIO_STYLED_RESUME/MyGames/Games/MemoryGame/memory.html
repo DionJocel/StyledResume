@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet">
+    <title> Dumbledore's Memory Game </title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&family=Indie+Flower&family=Rowdies:wght@300;400;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: url('memorycursor.png'), auto;
+        }
+
+        body {
+            width: 100%;
+            height: 100dvh;
+            background-color: rgb(5, 0, 0);
+            overflow: hidden;
+        }
+
+        .main-body {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('bg.jpg');
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        .main-body::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0000005d;
+        }
+
+        .main-body>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        .title {
+            margin-top: 10dvh;
+            margin-left: 10dvh;
+            margin-right: 10dvh;
+            margin-bottom: 3dvh;
+            width: 65%;
+        }
+
+        .title h1 {
+            color: #F0E68C;
+            font-family: "Rowdies", sans-serif;
+            font-weight: 700;
+            font-style: normal;
+            font-size: 8dvh;
+            text-shadow:
+                2px 2px 4px rgba(0, 0, 0, 0.5),
+                0 0 8px rgba(240, 230, 140, 0.6);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .title h2 {
+            color: #ffffffb7;
+            font-family: "Gloria Hallelujah", cursive;
+            font-weight: 600;
+            font-style: normal;
+            font-size: 3.8dvh;
+            text-shadow:
+                1px 1px 2px rgba(0, 0, 0, 0.7),
+                0 0 8px rgba(0, 0, 0, 0.705);
+            letter-spacing: 0.5px;
+            line-height: 1.4;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        #instructions {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+            max-width: 600px;
+            margin: 1rem auto;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #2c1a0e 0%, #1a0f07 100%);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            border: 1px solid #4a2e15;
+        }
+
+        .instructions-title {
+            color: #f3d9b5;
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            background: linear-gradient(to right, #d4a373 0%, #f8edeb 50%, #d4a373 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .instructions-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .instruction-card {
+            display: flex;
+            align-items: center;
+            background: rgba(60, 38, 20, 0.7);
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            border-left: 3px solid #d4a373;
+        }
+
+        .instruction-card:hover {
+            transform: translateY(-3px);
+            background: rgba(80, 50, 25, 0.7);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #d4a373 0%, #f8edeb 100%);
+            color: #3e2723;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1.2rem;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(212, 163, 115, 0.4);
+            font-size: 1.1rem;
+        }
+
+        .step-text {
+            color: #f8edeb;
+            font-size: 1.1rem;
+            margin: 0;
+            flex: 1;
+            line-height: 1.6;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .instruction-box {
+            position: absolute;
+            top: 5dvh;
+            right: 5dvh;
+            z-index: 10;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+        }
+
+        .instruction-btn {
+            width: 25dvh;
+            height: 6dvh;
+            font-size: 2.35dvh;
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            color: #f3e9dc;
+            background: linear-gradient(145deg, #3e2723, #5d4037);
+            border: 2px solid #8d6e63;
+            border-radius: 12px;
+            padding: 0 2dvh;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow:
+                0 2px 10px rgba(0, 0, 0, 0.2),
+                inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1dvh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .instruction-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.1),
+                    transparent);
+            transition: 0.5s;
+        }
+
+        .instruction-btn:hover {
+            background: linear-gradient(145deg, #5d4037, #3e2723);
+            box-shadow:
+                0 4px 15px rgba(0, 0, 0, 0.3),
+                inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            color: #fff8f0;
+        }
+
+        .instruction-btn:hover::before {
+            left: 100%;
+        }
+
+        .instruction-btn:active {
+            transform: translateY(0);
+            box-shadow:
+                0 2px 5px rgba(0, 0, 0, 0.2),
+                inset 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .difficulty-selector {
+            position: absolute;
+            top: 13dvh;
+            right: 2dvh;
+            background: transparent;
+            padding: 30px 0;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 40dvh;
+            z-index: 5;
+        }
+
+        .difficulty-selector h2 {
+            text-align: right;
+            color: #4CAF50;
+            font-family: "Rowdies", sans-serif;
+            font-style: normal;
+            font-size: 3.6dvh;
+            letter-spacing: -0.5px;
+            position: relative;
+            padding-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.795);
+        }
+
+        .options {
+            width: 33dvh;
+            display: flex;
+            flex-direction: column;
+            justify-self: flex-end;
+            gap: 15px;
+        }
+
+        .option {
+            position: relative;
+        }
+
+        .option input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        .option-label {
+            display: block;
+            padding: 15px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid #000000;
+            font-weight: 400;
+            color: #000000;
+            font-family: "Rowdies", sans-serif;
+            font-style: normal;
+            font-size: 2.4dvh;
+        }
+
+        .option:hover .option-label {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .option input:checked~.option-label {
+            border-color: #4a6bff;
+            background-color: #f0f4ff;
+            color: #4a6bff;
+            font-weight: 600;
+        }
+
+        .option input:checked~.option-label::after {
+            content: "✓";
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #4a6bff;
+        }
+
+        .easy input:checked~.option-label {
+            border-color: #4CAF50;
+            background-color: #2e0404;
+            color: #4CAF50;
+        }
+
+        .easy input:checked~.option-label::after {
+            color: #4CAF50;
+        }
+
+        .medium input:checked~.option-label {
+            border-color: #4CAF50;
+            background-color: #2e0404;
+            color: #4CAF50;
+        }
+
+        .medium input:checked~.option-label::after {
+            color: #4CAF50;
+        }
+
+        .hard input:checked~.option-label {
+            border-color: #4CAF50;
+            background-color: #2e0404;
+            color: #4CAF50;
+        }
+
+        .hard input:checked~.option-label::after {
+            color: #4CAF50;
+        }
+
+        .difficulty-selector p {
+            font-weight: 600;
+            text-align: right;
+            color: rgba(255, 255, 255, 0.288);
+            padding-top: 6px;
+        }
+
+        .houses-section {
+            width: 100%;
+            height: 45dvh;
+        }
+
+        .houses-section h1 {
+            padding: 2dvh 5dvh;
+            font-size: 4dvh;
+            font-family: "Indie Flower", cursive;
+            font-weight: 800;
+            font-style: normal;
+            color: #4CAF50;
+            text-shadow: 2px 2px 2px #000000;
+        }
+
+        .houses {
+            width: 80%;
+            height: 80%;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .house-img {
+            width: 33dvh;
+            height: 33dvh;
+        }
+
+        .house-img:hover img {
+            scale: 1.1;
+        }
+
+        .housepopup {
+            position: relative;
+            transform: translateY(-45%);
+            opacity: 0;
+            transition: 0.2s ease;
+        }
+
+        .housepopup h1 {
+            text-align: center;
+            font-size: 6dvh;
+            font-family: "Rowdies", sans-serif;
+            font-weight: 700;
+            font-style: normal;
+            padding: 0;
+        }
+
+        .gryffindor h1 {
+            color: #EEBA30;
+            text-shadow: 6px 6px 2px #AE0001;
+        }
+
+        .hufflepuff h1 {
+            color: #E6B800;
+            text-shadow: 6px 6px 2px #01030a;
+        }
+
+        .ravenclaw h1 {
+            color: #5D5D5D;
+            text-shadow: 5px 5px 2px #0E1A40;
+        }
+
+        .slytherin h1 {
+            color: #31aa5c;
+            text-shadow: 4px 4px 2px #0000009f;
+        }
+
+        .house-img:hover .housepopup {
+            opacity: 1;
+        }
+
+        .house-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.3s ease;
+        }
+
+        .huff img {
+            width: 90%;
+        }
+
+        .return {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 150px;
+            height: 40px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(40, 40, 40, 0.8);
+            border-radius: 10px;
+            box-shadow:
+                0 4px 6px rgba(0, 0, 0, 0.2),
+                inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            z-index: 5;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            color: #e0e0e0;
+            font-weight: 500;
+            border: 1px solid #3a3a3a;
+            backdrop-filter: blur(5px);
+        }
+
+        .return:hover {
+            transform: translateY(-2px) scale(1.02);
+            cursor: pointer;
+            background: rgba(50, 50, 50, 0.9);
+            box-shadow:
+                0 6px 12px rgba(0, 0, 0, 0.3),
+                inset 0 1px 1px rgba(255, 255, 255, 0.15);
+            color: white;
+            border-color: #ffffff;
+        }
+
+        .return:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        #errorpopup {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5dvh;
+            color: rgb(248, 134, 134);
+            text-shadow: 2px 2px 3px black,
+                2px 2px 3px rgb(255, 0, 0);
+            opacity: 0;
+        }
+
+        button#playButton {
+            position: fixed;
+            bottom: 10dvh;
+            right: 5dvh;
+            font-size: 2dvh;
+            z-index: 9;
+        }
+
+        #modalOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+
+        #confirmbox {
+            width: 85dvh;
+            height: 70dvh;
+            background: rgba(0, 0, 0, 0.774);
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 10px;
+            box-shadow: 1px 1px 6px rgba(255, 255, 255, 0.623),
+                -1px -1px 6px rgba(255, 255, 255, 0.623);
+            z-index: 1000;
+            display: none;
+        }
+
+        #confirmbox h1 {
+            color: #f3d9b5;
+            text-align: center;
+            font-size: 8dvh;
+            padding-top: 6dvh;
+            margin-bottom: 10dvh;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            background: linear-gradient(to right, #d4a373 0%, #f8edeb 50%, #d4a373 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        #confirmbox h2 {
+            color: #f3d9b5;
+            text-align: left;
+            font-size: 6dvh;
+            padding-bottom: 3dvh;
+            padding-left: 6dvh;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            background: linear-gradient(to right, #d4a373 0%, #f8edeb 50%, #d4a373 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .buttoncon {
+            position: relative;
+            bottom: -10dvh;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .buttoncon button {
+            width: 17dvh;
+            height: 6.5dvh;
+            font-size: 1.8dvh;
+            background: rgba(40, 40, 40, 0.8);
+            border-radius: 10px;
+            box-shadow:
+                0 4px 6px rgba(0, 0, 0, 0.2),
+                inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            color: #e0e0e0;
+            font-weight: 500;
+            border: 1px solid #3a3a3a;
+            backdrop-filter: blur(5px);
+            z-index: 9;
+        }
+
+        .buttoncon button:hover {
+            transform: translateY(-2px) scale(1.02);
+            cursor: pointer;
+            background: rgba(50, 50, 50, 0.9);
+            box-shadow:
+                0 6px 12px rgba(0, 0, 0, 0.3),
+                inset 0 1px 1px rgba(255, 255, 255, 0.15);
+            color: white;
+            border-color: #ffffff;
+        }
+
+        #showdiff {
+            color: rgb(0, 4, 255);
+            text-shadow: 3px 3px 4px rgb(0, 0, 0);
+            text-align: right;
+        }
+
+        @media only screen and (max-width: 768px) {
+            .main-body {
+                height: 170dvh;
+                background-size: cover;
+                background-repeat: repeat;
+            }
+
+            .title {
+                margin: 15dvh 5dvh;
+                width: 90%;
+            }
+
+            .title h1 {
+                font-size: 5dvh;
+                text-align: center;
+            }
+
+            .title h2 {
+                font-size: 2.5dvh;
+                text-align: center;
+                display: block;
+                width: 100%;
+                margin-bottom: -15dvh;
+            }
+
+            .instruction-box {
+                top: 4dvh;
+                right: 25%;
+                transform: translateX(50%);
+            }
+
+            .instruction-btn {
+                width: 30dvh;
+                height: 7dvh;
+                font-size: 2.5dvh;
+            }
+
+            .difficulty-selector {
+                position: relative;
+                top: auto;
+                right: auto;
+                width: 100%;
+                padding: 20px 0;
+                margin-top: 1dvh;
+            }
+
+            .difficulty-selector h2 {
+                text-align: center;
+            }
+
+            .difficulty-selector p {
+                text-align: center;
+            }
+
+            .options {
+                width: 80%;
+                margin: 0 auto;
+            }
+
+            .houses {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 1dvh;
+                justify-self: center;
+            }
+
+            .house-img {
+                width: 25dvh;
+                height: 25dvh;
+            }
+
+            #confirmbox {
+                width: 90%;
+                height: auto;
+                padding: 20px;
+            }
+
+            #confirmbox h1 {
+                font-size: 4dvh;
+                padding-top: 3dvh;
+                margin-bottom: 5dvh;
+            }
+
+            #confirmbox h2 {
+                font-size: 3dvh;
+                padding-left: 3dvh;
+            }
+
+            .buttoncon {
+                bottom: -5dvh;
+                padding-bottom: 3dvh;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="return" onclick="window.location.assign('../../index.html')"> Return to home </div>
+    <div class="memory-instructions" id="instructions">
+        <h2 class="instructions-title">How to Play</h2>
+        <div class="instructions-steps">
+            <div class="instruction-card">
+                <div class="step-number">1</div>
+                <p class="step-text">Flip over any two cards to reveal their image</p>
+            </div>
+            <div class="instruction-card">
+                <div class="step-number">2</div>
+                <p class="step-text">If they match, the cards stay face-up</p>
+            </div>
+            <div class="instruction-card">
+                <div class="step-number">3</div>
+                <p class="step-text">If they don't match, they flip back over</p>
+            </div>
+            <div class="instruction-card">
+                <div class="step-number">4</div>
+                <p class="step-text">Remember where the cards are to make matches</p>
+            </div>
+            <div class="instruction-card">
+                <div class="step-number">5</div>
+                <p class="step-text">Match all pairs before the other houses to win the cup!</p>
+            </div>
+        </div>
+    </div>
+    <section class="main-body">
+        <div class="title">
+            <h1> Dumbledore is hosting a Memory Game! </h1>
+            <h2> Come join and lead your house to win the House Cup! </h2>
+        </div>
+        <div class="instruction-box">
+            <button class="instruction-btn" onclick="showInstructions()">
+                Click for Instructions
+            </button>
+        </div>
+        <div class="difficulty-selector">
+            <h2>Select A Difficulty</h2>
+            <div class="options">
+                <label class="option easy">
+                    <input type="radio" name="difficulty" value="easy" id="easyDifficulty">
+                    <span class="option-label">Easy (16 Cards)</span>
+                </label>
+
+                <label class="option medium">
+                    <input type="radio" name="difficulty" value="medium" id="mediumDifficulty">
+                    <span class="option-label">Medium (24 Cards)</span>
+                </label>
+
+                <label class="option hard">
+                    <input type="radio" name="difficulty" value="hard" id="hardDifficulty">
+                    <span class="option-label">Hard (32 Cards)</span>
+                </label>
+            </div>
+            <p>Required before starting</p>
+        </div>
+        <section class="houses-section">
+            <h1> Select Your House To Start </h1>
+            <div class="houses">
+                <div class="house-img">
+                    <img src="gryffindor.png" onclick="playerGryffindor()">
+                    <div class="housepopup gryffindor">
+                        <h1> Gryffindor </h1>
+                    </div>
+                </div>
+                <div class="house-img huff">
+                    <img src="hufflepuff.png" onclick="playerHufflepuff()">
+                    <div class="housepopup hufflepuff">
+                        <h1> Hufflepuff</h1>
+                    </div>
+                </div>
+                <div class="house-img">
+                    <img src="ravenclaw.png" onclick="playerRavenclaw()">
+                    <div class="housepopup ravenclaw">
+                        <h1> Ravenclaw </h1>
+                    </div>
+                </div>
+                <div class="house-img">
+                    <img src="slytherin.png" onclick="playerSlytherin()">
+                    <div class="housepopup slytherin">
+                        <h1> Slytherin </h1>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div id="errorpopup">
+            <h1> Please select a difficulty first! </h1>
+        </div>
+        <div id="modalOverlay"></div>
+        <div id="confirmbox">
+            <h1> You have chosen: </h1>
+            <h2> Difficulty: <span id="showdiff">none</span> </h2>
+            <h2> Your House: <span id="showhouse">none</span> </h2>
+            <div class="buttoncon">
+                <button onclick="back()"> Back </button>
+                <button onclick="startGame()"> Continue </button>
+            </div>
+        </div>
+    </section>
+    <script src="memoryscript.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            GameConfig.setDifficulty(undefined);
+            const audio = new Audio('hp.mp3');
+            audio.loop = true;
+            const playMusic = audio.play();
+            if (playMusic !== undefined) {
+                playMusic.catch(error => {
+                    const playButton = document.createElement('button');
+                    playButton.id = 'playButton';
+                    playButton.textContent = 'Allow sound';
+                    playButton.style.padding = '10px 20px';
+                    playButton.style.position = 'fixed';
+                    playButton.style.background = 'transparent';
+                    playButton.style.color = 'white';
+                    playButton.style.textShadow = '1px 1px 3px black';
+                    playButton.style.border = '2px solid white';
+                    playButton.style.cursor = 'pointer';
+                    playButton.onclick = function () {
+                        audio.play();
+                        document.body.removeChild(playButton);
+                    };
+                    document.body.appendChild(playButton);
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
