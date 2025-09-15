@@ -391,6 +391,10 @@
  }
 
  @media (max-width: 760px) {
+     .tenorio-profile-img {
+         width: 180px;
+     }
+
      .tenorio-fname {
          font-size: 1.9rem;
      }
