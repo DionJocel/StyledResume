@@ -1,3 +1,5 @@
+ @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+
  * {
      margin: 0;
      padding: 0;
@@ -6,15 +8,22 @@
  }
 
  :root {
+     --primary: #0a0a0a;
+     --text-primary: #ffffff;
      --border-radius: 8px;
      --transition: all 0.3s ease;
  }
 
  body {
-     background-color: #0a0a0a;
-     color: #ffffff;
+     background-color: var(--primary);
+     color: var(--text-primary);
      line-height: 1.6;
      overflow-x: hidden;
+ }
+
+ a,
+ i {
+     color: var(--text-primary);
  }
 
  .tenorio-container {
@@ -33,6 +42,9 @@
  }
 
  .tenorio-right-container {
+     display: flex;
+     flex-direction: column;
+     gap: 2rem;
      background: #1a1a1a;
      padding: 2rem;
      border-radius: var(--border-radius);
@@ -84,7 +96,7 @@
      font-size: 2.5rem;
      font-weight: 700;
      display: block;
-     color: #ffffff;
+     color: var(--text-primary);
  }
 
  .tenorio-lname {
@@ -92,6 +104,9 @@
      font-weight: 300;
      display: block;
      color: #ff3c78;
+     font-family: "Roboto Mono", monospace;
+     font-optical-sizing: auto;
+     font-style: normal;
  }
 
  .tenorio-profile-title {
@@ -111,6 +126,7 @@
  .tenorio-skills,
  .tenorio-reference,
  .tenorio-education,
+ .tenorio-awards,
  .tenorio-right-container {
      background: #1a1a1a;
      padding: 1.5rem;
@@ -122,7 +138,9 @@
  .tenorio-skills:hover,
  .tenorio-reference:hover,
  .tenorio-education:hover,
- .tenorio-right-container:hover {
+ .tenorio-awards:hover,
+ .tenorio-right-container:hover,
+ .games-ko-hahaha:hover {
      transform: translateY(-5px);
      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
  }
@@ -158,6 +176,10 @@
      transform: scale(1.3);
  }
 
+ .tenorio-interest-item,
+ .tenorio-exp-item,
+ .tenorio-seminar-item,
+ .tenorio-awards-item,
  .tenorio-ref-item {
      margin-bottom: 1.5rem;
  }
@@ -169,7 +191,7 @@
  .tenorio-ref-name {
      font-size: 1.1rem;
      margin-bottom: 0.5rem;
-     color: #ffffff;
+     color: var(--text-primary);
  }
 
  .tenorio-edu-item {
@@ -202,7 +224,7 @@
  .tenorio-item-title {
      font-size: 1.1rem;
      margin-bottom: 0.3rem;
-     color: #ffffff;
+     color: var(--text-primary);
  }
 
  .tenorio-item-subTitle {
@@ -275,4 +297,84 @@
 
  ::-webkit-scrollbar-thumb:hover {
      background: #ff2b6e;
+ }
+
+ .tenorio-footer-con {
+     background: #0f0f0f;
+     border-radius: 12px;
+     padding: 3rem 2rem;
+     margin: 0 auto;
+     box-shadow: 0 -5px 30px rgba(0, 0, 0, 0.4);
+     border-top: 1px solid #1f1f1f;
+     display: flex;
+     justify-content: space-between;
+     width: 90%;
+ }
+
+ .tenorio-contact,
+ .tenorio-social {
+     flex: 1;
+     min-width: 300px;
+ }
+
+ .tenorio-title {
+     font-size: 1.5rem;
+     margin-bottom: 1.5rem;
+     color: #ff3c78;
+     position: relative;
+     padding-bottom: 0.5rem;
+ }
+
+ .tenorio-contact-info {
+     display: flex;
+     flex-direction: column;
+     gap: 0.8rem;
+ }
+
+ .tenorio-description {
+     display: flex;
+     align-items: center;
+     gap: 0.8rem;
+     color: #b3b3b3;
+     transition: all 0.3s ease;
+ }
+
+ .tenorio-description:hover {
+     color: #fff;
+     transform: translateX(5px);
+ }
+
+ .tenorio-description i {
+     color: #ff3c78;
+     width: 20px;
+ }
+
+ .tenorio-social-items {
+     display: flex;
+     flex-wrap: wrap;
+     gap: 1.2rem;
+ }
+
+ .tenorio-social-item {
+     display: flex;
+     align-items: center;
+     gap: 0.5rem;
+     padding: 0.8rem 1.2rem;
+     background: rgba(255, 60, 120, 0.1);
+     border: 1px solid rgba(255, 60, 120, 0.3);
+     border-radius: 30px;
+     color: #ff3c78;
+     text-decoration: none;
+     transition: all 0.3s ease;
+ }
+
+ .tenorio-social-item:hover {
+     background: #ff3c78;
+     color: white;
+     transform: translateY(-3px);
+     box-shadow: 0 5px 15px rgba(255, 60, 120, 0.4);
+ }
+
+ .tenorio-social-item i {
+     font-size: 1.2rem;
  }
