@@ -125,8 +125,8 @@
  .games-ko-hahaha,
  .tenorio-skills,
  .tenorio-reference,
- .tenorio-education,
- .tenorio-awards,
+ .tenorio-education,                            
+ .tenorio-awards,       
  .tenorio-right-container {
      background: #1a1a1a;
      padding: 1.5rem;
@@ -232,6 +232,12 @@
      color: #ff3c78;
  }
 
+ .tenorio-interest-items {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+ }
+
  .games-ko-hahaha {
      background: #1a1a1a;
      padding: 2rem;
@@ -308,7 +314,8 @@
      border-top: 1px solid #1f1f1f;
      display: flex;
      justify-content: space-between;
-     width: 90%;
+     align-items: center;
+     max-width: 1300px;
  }
 
  .tenorio-contact,
@@ -339,11 +346,6 @@
      transition: all 0.3s ease;
  }
 
- .tenorio-description:hover {
-     color: #fff;
-     transform: translateX(5px);
- }
-
  .tenorio-description i {
      color: #ff3c78;
      width: 20px;
@@ -359,7 +361,7 @@
      display: flex;
      align-items: center;
      gap: 0.5rem;
-     padding: 0.8rem 1.2rem;
+     padding: 0.8rem 0.8rem;
      background: rgba(255, 60, 120, 0.1);
      border: 1px solid rgba(255, 60, 120, 0.3);
      border-radius: 30px;
@@ -375,6 +377,6 @@
      box-shadow: 0 5px 15px rgba(255, 60, 120, 0.4);
  }
 
- .tenorio-social-item i {
-     font-size: 1.2rem;
+ .tenorio-social-items i {
+     font-size: 2rem;
  }
