@@ -21,11 +21,6 @@
      overflow-x: hidden;
  }
 
- a,
- i {
-     color: var(--text-primary);
- }
-
  .tenorio-container {
      max-width: 1400px;
      margin: 0 auto;
@@ -45,10 +40,6 @@
      display: flex;
      flex-direction: column;
      gap: 2rem;
-     background: #1a1a1a;
-     padding: 2rem;
-     border-radius: var(--border-radius);
-     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
  }
 
  .tenorio-profile {
@@ -93,20 +84,24 @@
  }
 
  .tenorio-fname {
-     font-size: 2.5rem;
-     font-weight: 700;
+     font-size: 1.7rem;
+     font-weight: 300;
      display: block;
      color: var(--text-primary);
+     text-transform: uppercase;
+     margin-bottom: -1.4rem;
  }
 
  .tenorio-lname {
-     font-size: 2.5rem;
-     font-weight: 300;
+     margin-top: 0;
+     font-size: 3.5rem;
+     font-weight: 700;
      display: block;
      color: #ff3c78;
      font-family: "Roboto Mono", monospace;
      font-optical-sizing: auto;
      font-style: normal;
+     text-transform: uppercase;
  }
 
  .tenorio-profile-title {
@@ -125,8 +120,8 @@
  .games-ko-hahaha,
  .tenorio-skills,
  .tenorio-reference,
- .tenorio-education,                            
- .tenorio-awards,       
+ .tenorio-education,
+ .tenorio-awards,
  .tenorio-right-container {
      background: #1a1a1a;
      padding: 1.5rem;
@@ -233,12 +228,16 @@
  }
 
  .tenorio-interest-items {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+     display: flex;
+     align-items: center;
+     gap: 10px;
  }
 
  .games-ko-hahaha {
+     display: flex;
+     justify-content: center;
+     gap: 3dvh;
+     align-items: center;
      background: #1a1a1a;
      padding: 2rem;
      border-radius: var(--border-radius);
@@ -336,6 +335,7 @@
      display: flex;
      flex-direction: column;
      gap: 0.8rem;
+     margin-bottom: 2rem;
  }
 
  .tenorio-description {
@@ -355,6 +355,10 @@
      display: flex;
      flex-wrap: wrap;
      gap: 1.2rem;
+ }
+
+ .tenorio-socials {
+     display: flex;
  }
 
  .tenorio-social-item {
@@ -379,4 +383,56 @@
 
  .tenorio-social-items i {
      font-size: 2rem;
+ }
+
+ .tenorio-socials {
+     display: flex;
+     align-items: center;
+ }
+
+ @media (max-width: 760px) {
+     .tenorio-fname {
+         font-size: 1.9rem;
+     }
+
+     .games-ko-hahaha {
+         flex-direction: column;
+     }
+
+     .tenorio-container {
+         grid-template-columns: 1fr;
+         padding: 1rem;
+     }
+
+     .tenorio-profile-container {
+         flex-direction: column;
+         text-align: center;
+     }
+
+     .tenorio-profile-title::after {
+         left: 50%;
+         transform: translateX(-50%);
+     }
+
+     .project-grid {
+         grid-template-columns: 1fr;
+     }
+
+     .tenorio-footer-con {
+         flex-direction: column;
+     }
+
+     .tenorio-contact,
+     .tenorio-social {
+         min-width: 100%;
+     }
+
+     .tenorio-socials {
+         flex-direction: column;
+         align-items: center;
+     }
+
+     .tenorio-social-items i {
+         font-size: 1.8rem;
+     }
  }
