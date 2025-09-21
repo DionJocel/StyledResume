@@ -149,10 +149,8 @@
  .tenorio-reference:hover,
  .tenorio-education:hover,
  .tenorio-awards:hover,
- .tenorio-right-container:hover,
- .games-ko-hahaha:hover {
-     transform: translateY(-5px);
-     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+ .tenorio-right-container {
+     box-shadow: 0 8px 25px rgba(209, 162, 162, 0.091);
  }
 
  .tenorio-title {
@@ -408,7 +406,7 @@
  }
 
  .tenorio-footer-con {
-     background: #0f0f0f;
+     background: #0f0f0f00;
      border-radius: 12px;
      padding: 3rem 2rem;
      margin: 0 auto;
