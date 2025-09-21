@@ -151,7 +151,7 @@ body {
 .tenorio-reference:hover,
 .tenorio-education:hover,
 .tenorio-awards:hover,
-.tenorio-right-container {
+.tenorio-right-container:hover {
     box-shadow: 0 8px 25px rgba(209, 162, 162, 0.091);
 }
 
@@ -544,3 +544,4 @@ footer .tenorio-title {
         font-size: 1.8rem;
     }
 }
+
